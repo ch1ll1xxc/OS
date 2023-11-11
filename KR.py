@@ -11,7 +11,16 @@ class MainWindow(QWidget):
         self.setMinimumHeight(300)
         self.setMinimumWidth(500)
         self.setGeometry(300, 300, 500, 300)
+        self.initUI()
         self.inverseTAGS = {value: key for key, value in TAGS.items()}
+
+    def initUI(self):
+        # Создаем кнопку для выбора изображения
+        self.btn_select = QPushButton("Выбрать изображение", self)
+        self.btn_select.setFont(QFont("Mono", 8))
+        self.btn_select.adjustSize()
+        self.btn_select.move(175, 30)
+
 
 
 def window():
