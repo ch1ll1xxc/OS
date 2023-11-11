@@ -20,7 +20,16 @@ class MainWindow(QWidget):
         self.btn_select.setFont(QFont("Mono", 8))
         self.btn_select.adjustSize()
         self.btn_select.move(175, 30)
+        self.btn_select.clicked.connect(self.selectImage)
 
+    def selectImage(self):
+        file_name, _ = QFileDialog.getOpenFileName(self, "Выберите изображение", "", "Изображения (*.jpg *.png)")
+        self.file_name = file_name
+        self.name = os.path.basename(self.file_name)[:-4]
+        if not self.file_name:
+            QMessageBox.warning(self, "Ошибка", "Необходимо выбрать изображение!")
+            return
+        self.showMetadata()
 
 
 def window():
