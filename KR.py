@@ -22,6 +22,11 @@ class MainWindow(QWidget):
         self.btn_select.move(175, 30)
         self.btn_select.clicked.connect(self.selectImage)
 
+        # Создаем поле для отображения метаданных
+        self.metadata_field = QTextEdit(self)
+        self.metadata_field.setGeometry(50, 75, 400, 140)
+        self.metadata_field.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
+
     def selectImage(self):
         file_name, _ = QFileDialog.getOpenFileName(self, "Выберите изображение", "", "Изображения (*.jpg *.png)")
         self.file_name = file_name
@@ -30,6 +35,7 @@ class MainWindow(QWidget):
             QMessageBox.warning(self, "Ошибка", "Необходимо выбрать изображение!")
             return
         self.showMetadata()
+
 
 
 def window():
