@@ -7,7 +7,7 @@ import os
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Test")
+        self.setWindowTitle("Извлечение метаданных из изображения")
         self.setMinimumHeight(300)
         self.setMinimumWidth(500)
         self.setGeometry(300, 300, 500, 300)
