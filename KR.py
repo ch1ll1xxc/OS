@@ -27,6 +27,12 @@ class MainWindow(QWidget):
         self.metadata_field.setGeometry(50, 75, 400, 140)
         self.metadata_field.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
 
+        # Создаем кнопку для удаления метаданных
+        self.btn_delete = QPushButton("Удалить один тег", self)
+        self.btn_delete.adjustSize()
+        self.btn_delete.move(168, 236)
+
+
     def selectImage(self):
         file_name, _ = QFileDialog.getOpenFileName(self, "Выберите изображение", "", "Изображения (*.jpg *.png)")
         self.file_name = file_name
