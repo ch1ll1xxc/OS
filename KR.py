@@ -42,6 +42,20 @@ class MainWindow(QWidget):
             return
         self.showMetadata()
 
+    def showMetadata(self):
+        if self.file_name is None:
+            return
+        image = Image.open(self.file_name)
+        exifdata = image._getexif()
+        metadata_str = "Метаданные файла:\n"
+        for tag_id in exifdata:
+            tag = TAGS.get(tag_id, tag_id)
+            data = exifdata.get(tag_id)
+            if isinstance(data, bytes):
+                data = data.decode()
+            metadata_str += f"{tag}: {data}\n"
+        self.metadata_field.setText(metadata_str)
+
 
 
 def window():
