@@ -72,7 +72,7 @@ class MainWindow(QWidget):
     def deleteTag(self):
         # Получаем текст из поля с метаданными
         metadata = self.metadata_field.toPlainText()
-        if metadata == "":
+        if metadata == "" or metadata == "Файл не содержит метаданных":
             QMessageBox.warning(self, "Ошибка", "Удаление запрещено")
             return
         if not self.file_name:
