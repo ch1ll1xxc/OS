@@ -32,6 +32,7 @@ class MainWindow(QWidget):
         self.btn_delete = QPushButton("Удалить один тег", self)
         self.btn_delete.adjustSize()
         self.btn_delete.move(168, 236)
+        self.btn_delete.clicked.connect(self.deleteTag)
 
     # Функция для выбора изображения
     def selectImage(self):
@@ -67,6 +68,43 @@ class MainWindow(QWidget):
             metadata_str += f"{tag}: {data}\n"
         # Отображаем строку в поле для метаданных
         self.metadata_field.setText(metadata_str)
+
+    def deleteTag(self):
+        # Получаем текст из поля с метаданными
+        metadata = self.metadata_field.toPlainText()
+        if metadata == "":
+            QMessageBox.warning(self, "Ошибка", "Удаление запрещено")
+            return
+        if not self.file_name:
+            QMessageBox.warning(self, "Ошибка", "Необходимо выбрать изображение!")
+            return
+        tag_to_delete, ok = QInputDialog.getText(self, "Удаление метаданных", "Введите тег, который нужно удалить")
+        if not ok:
+            # Выводим сообщение об ошибке
+            QMessageBox.warning(self, "Ошибка", "Невозможно удалить метаданные!")
+            return
+        img = Image.open(self.file_name)
+        name = os.path.basename(self.file_name)[:-4]
+        exif_dict = piexif.load(img.info["exif"])
+        if not (tag_to_delete in self.inverseTAGS.keys()):
+            # Выводим сообщение об ошибке
+            QMessageBox.warning(self, "Ошибка", "Тег не найден!")
+            return
+        if tag_to_delete == "GPSInfo":
+            # Удаляем метаданные GPSInfo
+            del exif_dict["GPS"]
+        else:
+            # Удаляем метаданные, которые совпадают с тегом, который нужно удалить
+            for key, value in exif_dict.items():
+                if not isinstance(value, dict):
+                    continue
+                correct_tag = self.inverseTAGS[tag_to_delete]
+                if correct_tag in value:
+                    del exif_dict[key][correct_tag]
+        exif_bytes = piexif.dump(exif_dict)
+        img.save(f"{name}_no_{tag_to_delete}.jpg", exif=exif_bytes)
+        # Выводим сообщение об успешном удалении метаданных
+        QMessageBox.information(self, "Успех", "Метаданные успешно удалены!")
 
 
 # Main function
