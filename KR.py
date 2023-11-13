@@ -47,6 +47,9 @@ class MainWindow(QWidget):
             return
         image = Image.open(self.file_name)
         exifdata = image._getexif()
+        if not exifdata:
+            self.metadata_field.setText("Файл не содержит метаданных")
+            return
         metadata_str = "Метаданные файла:\n"
         for tag_id in exifdata:
             tag = TAGS.get(tag_id, tag_id)
