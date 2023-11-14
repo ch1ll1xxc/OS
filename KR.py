@@ -34,6 +34,14 @@ class MainWindow(QWidget):
         self.btn_delete.move(168, 236)
         self.btn_delete.clicked.connect(self.deleteTag)
 
+        # Cоздаем кнопку для удаления всех метаданных
+        self.btn_delete_all = QPushButton("Удалить все метаданные", self)
+        self.btn_delete_all.adjustSize()
+        self.btn_delete_all.move(292, 236)
+        self.btn_delete_all.clicked.connect(self.deleteAllMetadata)
+
+
+
     # Функция для выбора изображения
     def selectImage(self):
         file_name, _ = QFileDialog.getOpenFileName(self, "Выберите изображение", "", "Изображения (*.jpg *.png)")
@@ -103,6 +111,32 @@ class MainWindow(QWidget):
                     del exif_dict[key][correct_tag]
         exif_bytes = piexif.dump(exif_dict)
         img.save(f"{name}_no_{tag_to_delete}.jpg", exif=exif_bytes)
+        # Выводим сообщение об успешном удалении метаданных
+        QMessageBox.information(self, "Успех", "Метаданные успешно удалены!")
+
+
+# Функция для удаления всех метаданных из изображения
+    def deleteAllMetadata(self):
+        # Получаем текст из поля с метаданными
+        metadata = self.metadata_field.toPlainText()
+        if metadata == "" or metadata == "Файл не содержит метаданных":
+            QMessageBox.warning(self, "Ошибка", "Удаление запрещено")
+            return
+        # Открываем диалоговое окно для выбора директории
+        save_path = QFileDialog.getExistingDirectory(self, 'Выбрать директорию')
+        if not self.file_name:
+            QMessageBox.warning(self, "Ошибка", "Необходимо выбрать изображение!")
+            return
+        if not save_path:
+            QMessageBox.warning(self, "Ошибка", "Директория не выбрана!")
+            return
+        # Открываем изображение с помощью библиотеки Pillow
+        image = Image.open(self.file_name)
+        # Создаем копию без метаданных
+        img_no_md = Image.new(image.mode, image.size)
+        img_no_md.putdata(list(image.getdata()))
+        # Сохраняем изображение без метаданных
+        img_no_md.save(f"{self.name}_no_tags.jpg")
         # Выводим сообщение об успешном удалении метаданных
         QMessageBox.information(self, "Успех", "Метаданные успешно удалены!")
 
