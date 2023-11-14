@@ -4,6 +4,8 @@ from PyQt5.QtGui import *
 from PIL import Image
 from PIL.ExifTags import TAGS
 import os
+
+
 # Создаем класс главного окна
 class MainWindow(QWidget):
     def __init__(self):
@@ -40,7 +42,12 @@ class MainWindow(QWidget):
         self.btn_delete_all.move(292, 236)
         self.btn_delete_all.clicked.connect(self.deleteAllMetadata)
 
-
+        # Создаем кнопку для получения информации о программе
+        self.btn_about = QPushButton("О программе", self)
+        self.btn_about.setIcon(QIcon("Info_Simple_bw.svg.png"))
+        self.btn_about.adjustSize()
+        self.btn_about.move(342, 30)
+        self.btn_about.clicked.connect(self.showInfo)
 
     # Функция для выбора изображения
     def selectImage(self):
@@ -114,8 +121,7 @@ class MainWindow(QWidget):
         # Выводим сообщение об успешном удалении метаданных
         QMessageBox.information(self, "Успех", "Метаданные успешно удалены!")
 
-
-# Функция для удаления всех метаданных из изображения
+    # Функция для удаления всех метаданных из изображения
     def deleteAllMetadata(self):
         # Получаем текст из поля с метаданными
         metadata = self.metadata_field.toPlainText()
@@ -139,6 +145,11 @@ class MainWindow(QWidget):
         img_no_md.save(f"{self.name}_no_tags.jpg")
         # Выводим сообщение об успешном удалении метаданных
         QMessageBox.information(self, "Успех", "Метаданные успешно удалены!")
+
+    # Функция для вывода информации о программе
+    def showInfo(self):
+        QMessageBox.information(self, "Информация о программе",
+                                "Создано студентом группы ИКБО-10-22.\nВерсия 1.0.0.\nНикаких прав не защищено")
 
 
 # Main function
