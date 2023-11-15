@@ -29,6 +29,11 @@ class MainWindow(QWidget):
         self.metadata_field = QTextEdit(self)
         self.metadata_field.setGeometry(50, 75, 400, 140)
         self.metadata_field.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
+        # Создаем кнопку для экспорта информации
+        self.btn_export = QPushButton("Экспорт данных", self)
+        self.btn_export.adjustSize()
+        self.btn_export.move(50, 236)
+        self.btn_export.clicked.connect(self.exportMetadata)
 
         # Создаем кнопку для удаления метаданных
         self.btn_delete = QPushButton("Удалить один тег", self)
@@ -83,6 +88,26 @@ class MainWindow(QWidget):
             metadata_str += f"{tag}: {data}\n"
         # Отображаем строку в поле для метаданных
         self.metadata_field.setText(metadata_str)
+
+        # Функция для экспорта информации о метаданных в .txt файл
+
+    def exportMetadata(self):
+        # Получаем текст из поля с метаданными
+        metadata = self.metadata_field.toPlainText()
+        if metadata == "" or metadata == "Файл не содержит метаданных":
+            QMessageBox.warning(self, "Ошибка", "Нет информации, подлежащей экспорту")
+            return
+        # Открываем диалоговое окно для выбора директории
+        save_path = QFileDialog.getExistingDirectory(self, 'Выбрать директорию')
+        if not save_path:
+            QMessageBox.warning(self, "Ошибка", "Директория не выбрана!")
+            return
+        # Создаем файл с расширением .txt в выбранной директории
+        file = open(os.path.join(save_path, "metadata.txt"), "w")
+        # Записываем в файл информацию о метаданных
+        file.write(metadata)
+        file.close()
+        QMessageBox.information(self, "Экспорт данных", "Информация о метаданных успешно экспортирована")
 
     def deleteTag(self):
         # Получаем текст из поля с метаданными
