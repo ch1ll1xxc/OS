@@ -10,6 +10,7 @@ import os
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
+        self.setWindowIcon(QIcon("LOGO.png"))
         self.setWindowTitle("Извлечение метаданных из изображения")
         self.setMinimumHeight(300)
         self.setMinimumWidth(500)
