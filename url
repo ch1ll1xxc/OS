@@ -1,1 +1,2 @@
 https://www.dropbox.com/s/ija7ax3sj6ysb0p/blocknote-master.tar.gz
+echo -e "from django.apps import AppConfig\n\nclass BaseConfig(AppConfig):\n\tname = 'todoapp'" > apps/todoapp/apps.py
